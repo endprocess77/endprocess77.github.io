@@ -1,8 +1,7 @@
 import { getPlayers } from '@/lib/players';
 import RosterClient from './RosterClient';
 
-// Enable static parsing or dynamic on-request depending on build setup
-export const dynamic = 'force-dynamic';
+// Enable static site generation for static hosting like GitHub Pages
 
 export default function RosterPage() {
   const players = getPlayers();

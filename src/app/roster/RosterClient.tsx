@@ -18,8 +18,9 @@ interface PlayerImageProps {
 }
 
 function PlayerImage({ name, className, width, height, priority = false }: PlayerImageProps) {
+  const basePath = '/FeCric';
   // Try loading player-specific image
-  const [src, setSrc] = useState(`/${encodeURIComponent(name)}.png`);
+  const [src, setSrc] = useState(`${basePath}/${encodeURIComponent(name)}.png`);
 
   return (
     <Image
@@ -31,7 +32,7 @@ function PlayerImage({ name, className, width, height, priority = false }: Playe
       priority={priority}
       onError={() => {
         // Fall back to placeholder if it doesn't exist
-        setSrc('/Placeholder.png');
+        setSrc(`${basePath}/Placeholder.png`);
       }}
     />
   );
