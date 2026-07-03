@@ -315,10 +315,11 @@
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   z-index: 200;
-  padding: 20px;
+  padding: 40px 20px;
+  overflow-y: auto;
 }
 
 .modalContent {
@@ -327,6 +328,8 @@
   padding: 32px;
   position: relative;
   overflow: hidden;
+  margin-top: auto;
+  margin-bottom: auto;
 }
 
 .modalContent::before {

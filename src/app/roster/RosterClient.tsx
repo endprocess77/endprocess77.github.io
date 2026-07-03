@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import Image from 'next/image';
 import { Player } from '@/lib/players';
 import styles from './roster.module.css';
@@ -49,8 +49,19 @@ export default function RosterClient({ initialPlayers }: RosterClientProps) {
   // Pagination State
   const [visibleCount, setVisibleCount] = useState(24);
   
-  // Selected Player for Details Modal
   const [selectedPlayer, setSelectedPlayer] = useState<Player | null>(null);
+
+  // Lock body scroll when modal is open
+  useEffect(() => {
+    if (selectedPlayer) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [selectedPlayer]);
 
   // Dynamic filter options compiled from dataset
   const battingOptions = useMemo(() => {
