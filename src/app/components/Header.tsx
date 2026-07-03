@@ -26,12 +26,6 @@ export default function Header() {
           >
             Roster
           </Link>
-          <Link 
-            href="/match" 
-            className={`nav-item ${pathname === '/match' ? 'nav-item-active' : ''}`}
-          >
-            Match Draft
-          </Link>
         </nav>
       </div>
     </header>
