@@ -3,6 +3,7 @@
 import { useState, useMemo, useEffect } from 'react';
 import { Player } from '@/lib/players';
 import styles from './match.module.css';
+import PlayerImage from '@/app/components/PlayerImage';
 
 interface MatchClientProps {
   initialPlayers: Player[];
@@ -313,8 +314,8 @@ export default function MatchClient({ initialPlayers }: MatchClientProps) {
                 return (
                   <div key={player.name} className={styles.filledSlot}>
                     <div className={styles.playerInfo}>
-                      <div className={styles.playerAvatar} style={{ color: '#60a5fa' }}>
-                        {getInitials(player.name)}
+                      <div className={styles.playerAvatar}>
+                        <PlayerImage name={player.name} width={32} height={32} />
                       </div>
                       <div className={styles.playerNameRole}>
                         <span className={styles.playerName}>{player.name}</span>
@@ -414,8 +415,8 @@ export default function MatchClient({ initialPlayers }: MatchClientProps) {
                 return (
                   <div key={player.name} className={styles.filledSlot}>
                     <div className={styles.playerInfo}>
-                      <div className={styles.playerAvatar} style={{ color: '#c084fc' }}>
-                        {getInitials(player.name)}
+                      <div className={styles.playerAvatar}>
+                        <PlayerImage name={player.name} width={32} height={32} />
                       </div>
                       <div className={styles.playerNameRole}>
                         <span className={styles.playerName}>{player.name}</span>

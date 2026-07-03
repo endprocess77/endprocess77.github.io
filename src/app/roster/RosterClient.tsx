@@ -1,41 +1,12 @@
 'use client';
 
 import { useState, useMemo, useEffect } from 'react';
-import Image from 'next/image';
 import { Player } from '@/lib/players';
 import styles from './roster.module.css';
+import PlayerImage from '@/app/components/PlayerImage';
 
 interface RosterClientProps {
   initialPlayers: Player[];
-}
-
-interface PlayerImageProps {
-  name: string;
-  className?: string;
-  width: number;
-  height: number;
-  priority?: boolean;
-}
-
-function PlayerImage({ name, className, width, height, priority = false }: PlayerImageProps) {
-  const basePath = '';
-  // Try loading player-specific image
-  const [src, setSrc] = useState(`${basePath}/${encodeURIComponent(name)}.png`);
-
-  return (
-    <Image
-      src={src}
-      alt={name}
-      width={width}
-      height={height}
-      className={className}
-      priority={priority}
-      onError={() => {
-        // Fall back to placeholder if it doesn't exist
-        setSrc(`${basePath}/Placeholder.png`);
-      }}
-    />
-  );
 }
 
 export default function RosterClient({ initialPlayers }: RosterClientProps) {
@@ -306,7 +277,7 @@ export default function RosterClient({ initialPlayers }: RosterClientProps) {
                     <div className={styles.cardHeader}>
                       <div className={styles.avatarNameGroup}>
                         <div className={styles.cardAvatar}>
-                          {getInitials(player.name)}
+                          <PlayerImage name={player.name} width={44} height={44} />
                         </div>
                         <div>
                           <h3 className={styles.playerName}>{player.name}</h3>
