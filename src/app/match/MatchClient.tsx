@@ -123,159 +123,169 @@ export default function MatchClient({ initialPlayers }: MatchClientProps) {
     setScoreA({ runs: 0, wickets: 0, overs: 0 });
     setScoreB(null);
 
-    // Dynamic factors based on team averages
-    const techA = avgA.technique;
-    const aggrA = avgA.aggression;
-    const accB = avgB.accuracy;
+    try {
+      // Dynamic factors based on team averages
+      const techA = avgA.technique;
+      const aggrA = avgA.aggression;
+      const accB = avgB.accuracy;
 
-    const techB = avgB.technique;
-    const aggrB = avgB.aggression;
-    const accA = avgA.accuracy;
+      const techB = avgB.technique;
+      const aggrB = avgB.aggression;
+      const accA = avgA.accuracy;
 
-    let logLines: string[] = ["--- INNINGS 1: TEAM A BATTING ---"];
-    let runsA = 0;
-    let wicketsA = 0;
-    let oversA = 0;
+      let logLines: string[] = ["--- INNINGS 1: TEAM A BATTING ---"];
+      let runsA = 0;
+      let wicketsA = 0;
+      let oversA = 0;
 
-    // First Innings (Team A Bats)
-    for (let ball = 1; ball <= 120; ball++) {
-      if (wicketsA >= 10) {
-        logLines.push("ALL OUT! Team A is bowled out.");
-        break;
-      }
-      
-      const currentOver = Math.floor((ball - 1) / 6);
-      const currentBall = ((ball - 1) % 6) + 1;
-      
-      // Calculate outcome probability
-      // High aggression = more runs but more wickets
-      // High technique = fewer wickets
-      // High bowling accuracy = fewer runs, more wickets
-      const runChance = Math.random() * 100 + (aggrA * 0.15) - (accB * 0.1);
-      const wicketChance = Math.random() * 100 + (accB * 0.12) - (techA * 0.12);
-
-      let event = "";
-      if (wicketChance > 82) {
-        wicketsA++;
-        const batsman = teamA[Math.min(wicketsA, 10)].name;
-        event = `${currentOver}.${currentBall}: OUT! ${batsman} is caught in the deep!`;
-        logLines.push(event);
-      } else {
-        let runsScored = 0;
-        if (runChance > 88) {
-          runsScored = 6;
-          event = `${currentOver}.${currentBall}: SIX! Magnificent shot cleared the ropes!`;
-        } else if (runChance > 70) {
-          runsScored = 4;
-          event = `${currentOver}.${currentBall}: FOUR! Pierced the gap through covers.`;
-        } else if (runChance > 40) {
-          runsScored = 1 + (Math.random() > 0.6 ? 1 : 0); // 1 or 2 runs
-          event = `${currentOver}.${currentBall}: Swept away for ${runsScored} run(s).`;
-        } else {
-          runsScored = 0;
-          event = `${currentOver}.${currentBall}: Dot ball. Tight line from the bowler.`;
-        }
-        runsA += runsScored;
-        if (runsScored === 4 || runsScored === 6 || Math.random() > 0.8) {
-          logLines.push(event);
-        }
-      }
-      oversA = parseFloat(`${currentOver}.${currentBall}`);
-    }
-    
-    const target = runsA + 1;
-    logLines.push(`--- INNINGS 1 ENDS: Team A scored ${runsA}/${wicketsA} ---`);
-    logLines.push(`Target for Team B: ${target} runs in 20 overs.`);
-    logLines.push("");
-    logLines.push("--- INNINGS 2: TEAM B BATTING ---");
-
-    let runsB = 0;
-    let wicketsB = 0;
-    let oversB = 0;
-
-    // Second Innings (Team B Bats)
-    for (let ball = 1; ball <= 120; ball++) {
-      if (runsB >= target) {
-        logLines.push("VICTORY! Team B chased down the target.");
-        break;
-      }
-      if (wicketsB >= 10) {
-        logLines.push("ALL OUT! Team B fell short of the target.");
-        break;
-      }
-
-      const currentOver = Math.floor((ball - 1) / 6);
-      const currentBall = ((ball - 1) % 6) + 1;
-
-      const runChance = Math.random() * 100 + (aggrB * 0.15) - (accA * 0.1);
-      const wicketChance = Math.random() * 100 + (accA * 0.12) - (techB * 0.12);
-
-      let event = "";
-      if (wicketChance > 82) {
-        wicketsB++;
-        const batsman = teamB[Math.min(wicketsB, 10)].name;
-        event = `${currentOver}.${currentBall}: OUT! ${batsman} bowled clean! What a delivery.`;
-        logLines.push(event);
-      } else {
-        let runsScored = 0;
-        if (runChance > 88) {
-          runsScored = 6;
-          event = `${currentOver}.${currentBall}: SIX! Pulled high over mid-wicket!`;
-        } else if (runChance > 70) {
-          runsScored = 4;
-          event = `${currentOver}.${currentBall}: FOUR! Flicked off the pads elegantly.`;
-        } else if (runChance > 40) {
-          runsScored = 1 + (Math.random() > 0.6 ? 1 : 0);
-          event = `${currentOver}.${currentBall}: Controlled push to the outfield for ${runsScored}.`;
-        } else {
-          runsScored = 0;
-          event = `${currentOver}.${currentBall}: Defensive block. Dot ball.`;
-        }
-        runsB += runsScored;
-        if (runsScored === 4 || runsScored === 6 || Math.random() > 0.8) {
-          logLines.push(event);
-        }
-      }
-      oversB = parseFloat(`${currentOver}.${currentBall}`);
-    }
-
-    logLines.push(`--- INNINGS 2 ENDS: Team B scored ${runsB}/${wicketsB} ---`);
-
-    // Determine Winner
-    let result = "";
-    if (runsB > runsA) {
-      result = "Team B wins by " + (10 - wicketsB) + " wickets!";
-    } else if (runsA > runsB) {
-      result = "Team A wins by " + (runsA - runsB) + " runs!";
-    } else {
-      result = "Match tied! Thrilling finish.";
-    }
-    logLines.push(`=== MATCH COMPLETED: ${result} ===`);
-
-    // Stream lines into log progressively for high-fidelity simulation effect
-    let currentIdx = 0;
-    const interval = setInterval(() => {
-      if (currentIdx < logLines.length) {
-        setSimulationLog(prev => [...prev, logLines[currentIdx]]);
-        
-        // Progressively update score outputs for indicators
-        if (logLines[currentIdx].includes("INNINGS 1 ENDS")) {
-          setScoreA({ runs: runsA, wickets: wicketsA, overs: 20 });
-          setScoreB({ runs: 0, wickets: 0, overs: 0 });
-        }
-        if (logLines[currentIdx].includes("INNINGS 2 ENDS") || logLines[currentIdx].includes("VICTORY")) {
-          setScoreB({ runs: runsB, wickets: wicketsB, overs: Math.min(20, oversB) });
+      // First Innings (Team A Bats)
+      for (let ball = 1; ball <= 120; ball++) {
+        if (wicketsA >= 10) {
+          logLines.push("ALL OUT! Team A is bowled out.");
+          break;
         }
         
-        currentIdx++;
-      } else {
-        clearInterval(interval);
-        setIsSimulating(false);
-        setScoreA({ runs: runsA, wickets: wicketsA, overs: Math.min(20, oversA) });
-        setScoreB({ runs: runsB, wickets: wicketsB, overs: Math.min(20, oversB) });
-        setWinner(runsB > runsA ? "Team B" : runsA > runsB ? "Team A" : "Tie");
+        const currentOver = Math.floor((ball - 1) / 6);
+        const currentBall = ((ball - 1) % 6) + 1;
+        
+        // Calculate outcome probability
+        const runChance = Math.random() * 100 + (aggrA * 0.15) - (accB * 0.1);
+        const wicketChance = Math.random() * 100 + (accB * 0.12) - (techA * 0.12);
+
+        let event = "";
+        if (wicketChance > 82) {
+          wicketsA++;
+          const batsman = teamA[Math.min(wicketsA, 10)].name;
+          event = `${currentOver}.${currentBall}: OUT! ${batsman} is caught in the deep!`;
+          logLines.push(event);
+        } else {
+          let runsScored = 0;
+          if (runChance > 88) {
+            runsScored = 6;
+            event = `${currentOver}.${currentBall}: SIX! Magnificent shot cleared the ropes!`;
+          } else if (runChance > 70) {
+            runsScored = 4;
+            event = `${currentOver}.${currentBall}: FOUR! Pierced the gap through covers.`;
+          } else if (runChance > 40) {
+            runsScored = 1 + (Math.random() > 0.6 ? 1 : 0); // 1 or 2 runs
+            event = `${currentOver}.${currentBall}: Swept away for ${runsScored} run(s).`;
+          } else {
+            runsScored = 0;
+            event = `${currentOver}.${currentBall}: Dot ball. Tight line from the bowler.`;
+          }
+          runsA += runsScored;
+          if (runsScored === 4 || runsScored === 6 || Math.random() > 0.8) {
+            logLines.push(event);
+          }
+        }
+        oversA = parseFloat(`${currentOver}.${currentBall}`);
       }
-    }, 150); // Fast progressive display
+      
+      const target = runsA + 1;
+      logLines.push(`--- INNINGS 1 ENDS: Team A scored ${runsA}/${wicketsA} ---`);
+      logLines.push(`Target for Team B: ${target} runs in 20 overs.`);
+      logLines.push("");
+      logLines.push("--- INNINGS 2: TEAM B BATTING ---");
+
+      let runsB = 0;
+      let wicketsB = 0;
+      let oversB = 0;
+
+      // Second Innings (Team B Bats)
+      for (let ball = 1; ball <= 120; ball++) {
+        if (runsB >= target) {
+          logLines.push("VICTORY! Team B chased down the target.");
+          break;
+        }
+        if (wicketsB >= 10) {
+          logLines.push("ALL OUT! Team B fell short of the target.");
+          break;
+        }
+
+        const currentOver = Math.floor((ball - 1) / 6);
+        const currentBall = ((ball - 1) % 6) + 1;
+
+        const runChance = Math.random() * 100 + (aggrB * 0.15) - (accA * 0.1);
+        const wicketChance = Math.random() * 100 + (accA * 0.12) - (techB * 0.12);
+
+        let event = "";
+        if (wicketChance > 82) {
+          wicketsB++;
+          const batsman = teamB[Math.min(wicketsB, 10)].name;
+          event = `${currentOver}.${currentBall}: OUT! ${batsman} bowled clean! What a delivery.`;
+          logLines.push(event);
+        } else {
+          let runsScored = 0;
+          if (runChance > 88) {
+            runsScored = 6;
+            event = `${currentOver}.${currentBall}: SIX! Pulled high over mid-wicket!`;
+          } else if (runChance > 70) {
+            runsScored = 4;
+            event = `${currentOver}.${currentBall}: FOUR! Flicked off the pads elegantly.`;
+          } else if (runChance > 40) {
+            runsScored = 1 + (Math.random() > 0.6 ? 1 : 0);
+            event = `${currentOver}.${currentBall}: Controlled push to the outfield for ${runsScored}.`;
+          } else {
+            runsScored = 0;
+            event = `${currentOver}.${currentBall}: Defensive block. Dot ball.`;
+          }
+          runsB += runsScored;
+          if (runsScored === 4 || runsScored === 6 || Math.random() > 0.8) {
+            logLines.push(event);
+          }
+        }
+        oversB = parseFloat(`${currentOver}.${currentBall}`);
+      }
+
+      logLines.push(`--- INNINGS 2 ENDS: Team B scored ${runsB}/${wicketsB} ---`);
+
+      // Determine Winner
+      let result = "";
+      if (runsB > runsA) {
+        result = "Team B wins by " + (10 - wicketsB) + " wickets!";
+      } else if (runsA > runsB) {
+        result = "Team A wins by " + (runsA - runsB) + " runs!";
+      } else {
+        result = "Match tied! Thrilling finish.";
+      }
+      logLines.push(`=== MATCH COMPLETED: ${result} ===`);
+
+      // Stream lines into log progressively for high-fidelity simulation effect
+      let currentIdx = 0;
+      const interval = setInterval(() => {
+        try {
+          if (currentIdx < logLines.length) {
+            setSimulationLog(prev => [...prev, logLines[currentIdx]]);
+            
+            // Progressively update score outputs for indicators
+            if (logLines[currentIdx].includes("INNINGS 1 ENDS")) {
+              setScoreA({ runs: runsA, wickets: wicketsA, overs: 20 });
+              setScoreB({ runs: 0, wickets: 0, overs: 0 });
+            }
+            if (logLines[currentIdx].includes("INNINGS 2 ENDS") || logLines[currentIdx].includes("VICTORY")) {
+              setScoreB({ runs: runsB, wickets: wicketsB, overs: Math.min(20, oversB) });
+            }
+            
+            currentIdx++;
+          } else {
+            clearInterval(interval);
+            setIsSimulating(false);
+            setScoreA({ runs: runsA, wickets: wicketsA, overs: Math.min(20, oversA) });
+            setScoreB({ runs: runsB, wickets: wicketsB, overs: Math.min(20, oversB) });
+            setWinner(runsB > runsA ? "Team B" : runsA > runsB ? "Team A" : "Tie");
+          }
+        } catch (err: any) {
+          clearInterval(interval);
+          setIsSimulating(false);
+          setSimulationLog(prev => [...prev, `[SIMULATION ERROR]: ${err.message || err}`]);
+          console.error("Simulation interval error:", err);
+        }
+      }, 150); // Fast progressive display
+    } catch (err: any) {
+      setIsSimulating(false);
+      setSimulationLog([`[SIMULATION ERROR]: ${err.message || err}`]);
+      console.error("Simulation loop error:", err);
+    }
   };
 
   return (
