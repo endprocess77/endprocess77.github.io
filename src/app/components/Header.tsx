@@ -10,7 +10,7 @@ export default function Header() {
     <header className="header-glass">
       <div className="nav-container">
         <Link href="/" className="logo-link">
-          <span className="gradient-text">FeCric</span>
+          <span className="gradient-text">CricCeleb</span>
           <span className="logo-dot"></span>
         </Link>
         <nav className="nav-links">

@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "FeCric - Cricket Roster Dashboard",
+  title: "CricCeleb - Cricket Roster Dashboard",
   description: "Browse, filter, and analyze ranked cricket players with interactive visual statistics and glassmorphic interface.",
 };
 
