@@ -26,6 +26,12 @@ export default function Header() {
           >
             Roster
           </Link>
+          <Link 
+            href="/teams" 
+            className={`nav-item ${pathname?.startsWith('/teams') || pathname?.startsWith('/team/') ? 'nav-item-active' : ''}`}
+          >
+            Teams
+          </Link>
         </nav>
       </div>
     </header>
