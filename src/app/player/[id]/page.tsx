@@ -1,6 +1,7 @@
 import { getPlayers, Player } from '@/lib/players';
 import Link from 'next/link';
 import PlayerImage from '@/app/components/PlayerImage';
+import RecommendedPlayers from '@/app/components/RecommendedPlayers';
 import styles from './player.module.css';
 
 function slugify(text: string): string {
@@ -70,11 +71,15 @@ export default async function PlayerPage({ params }: { params: Promise<{ id: str
     );
   }
 
-  // Get 4 random players of the same role (shuffled)
-  const sameRolePlayers = players.filter((p) => p.name !== player.name && p.role === player.role);
-  const similarPlayers = [...sameRolePlayers]
-    .sort(() => 0.5 - Math.random())
-    .slice(0, 4);
+  // Get candidates of the same role for client-side randomization
+  const sameRolePlayers = players
+    .filter((p) => p.name !== player.name && p.role === player.role)
+    .map((p) => ({
+      name: p.name,
+      role: p.role,
+      technique: p.technique,
+      aggression: p.aggression,
+    }));
 
   const stats = [
     { label: 'Technique', value: player.technique, color: '#f43f5e' },
@@ -152,27 +157,7 @@ export default async function PlayerPage({ params }: { params: Promise<{ id: str
 
       {/* Similar players recommendations */}
       <div className={styles.sectionTitle}>Similar & Recommended Players</div>
-      <div className={styles.recommendationsGrid}>
-        {similarPlayers.map((simPlayer) => (
-          <Link 
-            key={simPlayer.name} 
-            href={`/player/${slugify(simPlayer.name)}`}
-            className={`${styles.recCard} glass-card glass-card-hover`}
-          >
-            <div className={styles.recImageWrapper}>
-              <PlayerImage name={simPlayer.name} width={80} height={80} className={styles.recImage} />
-            </div>
-            <div className={styles.recInfo}>
-              <h3 className={styles.recName}>{simPlayer.name}</h3>
-              <span className={styles.recRole}>{simPlayer.role}</span>
-              <div className={styles.recStats}>
-                <span>Tech: {simPlayer.technique}%</span>
-                <span>Aggr: {simPlayer.aggression}%</span>
-              </div>
-            </div>
-          </Link>
-        ))}
-      </div>
+      <RecommendedPlayers candidates={sameRolePlayers} />
     </div>
   );
 }
