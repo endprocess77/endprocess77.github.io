@@ -1,0 +1,146 @@
+import { getPlayers, Player } from '@/lib/players';
+import Link from 'next/link';
+import PlayerImage from '@/app/components/PlayerImage';
+import styles from './player.module.css';
+
+function slugify(text: string): string {
+  return text
+    .toString()
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, '-')
+    .replace(/[^\w\-]+/g, '')
+    .replace(/\-\-+/g, '-');
+}
+
+export function generateStaticParams() {
+  const players = getPlayers();
+  return players.map((player) => ({
+    id: slugify(player.name),
+  }));
+}
+
+export default async function PlayerPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const players = getPlayers();
+  const player = players.find((p) => slugify(p.name) === id);
+
+  if (!player) {
+    return (
+      <div className="layout-container" style={{ textAlign: 'center', padding: '80px 20px' }}>
+        <h1 className="gradient-text">Player Not Found</h1>
+        <p style={{ color: '#94a3b8', margin: '16px 0 32px' }}>The player you are looking for does not exist in our roster.</p>
+        <Link href="/roster" className="logo-link" style={{ border: '1px solid rgba(255,255,255,0.1)', padding: '10px 20px', borderRadius: '8px' }}>
+          Back to Roster
+        </Link>
+      </div>
+    );
+  }
+
+  // Get similar players: same role, closest technique/aggression difference
+  const similarPlayers = players
+    .filter((p) => p.name !== player.name && p.role === player.role)
+    .map((p) => {
+      const distance = Math.abs(p.technique - player.technique) + Math.abs(p.aggression - player.aggression);
+      return { player: p, distance };
+    })
+    .sort((a, b) => a.distance - b.distance)
+    .slice(0, 4)
+    .map((item) => item.player);
+
+  const stats = [
+    { label: 'Technique', value: player.technique, color: '#f43f5e' },
+    { label: 'Timing', value: player.timing, color: '#ec4899' },
+    { label: 'Aggression', value: player.aggression, color: '#d946ef' },
+    { label: 'Movement', value: player.movement, color: '#3b82f6' },
+    { label: 'Accuracy', value: player.accuracy, color: '#06b6d4' },
+    { label: 'Fielding', value: player.fielding, color: '#10b981' },
+  ];
+
+  return (
+    <div className={styles.profileContainer}>
+      <div className={styles.backNav}>
+        <Link href="/roster" className={styles.backLink}>
+          &larr; Back to Roster
+        </Link>
+      </div>
+
+      {/* Hero section */}
+      <div className={`${styles.profileHero} glass-card`}>
+        <div className={styles.heroLayout}>
+          <div className={styles.heroImageWrapper}>
+            <PlayerImage 
+              name={player.name} 
+              width={240} 
+              height={240} 
+              className={styles.heroImage}
+              priority={true}
+            />
+          </div>
+          <div className={styles.heroDetails}>
+            <span className={styles.roleTag}>{player.role}</span>
+            <h1 className={styles.playerName}>{player.name}</h1>
+            
+            <div className={styles.metaGrid}>
+              <div className={styles.metaItem}>
+                <span className={styles.metaLabel}>Batting Hand</span>
+                <span className={styles.metaVal}>{player.batting}</span>
+              </div>
+              <div className={styles.metaItem}>
+                <span className={styles.metaLabel}>Bowling Style</span>
+                <span className={styles.metaVal}>{player.bowling || 'N/A'}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Stats display */}
+      <div className={styles.sectionTitle}>Performance Breakdown</div>
+      <div className={`${styles.statsGrid} glass-card`}>
+        {stats.map((stat) => (
+          <div key={stat.label} className={styles.statRow}>
+            <div className={styles.statInfo}>
+              <span className={styles.statLabel}>{stat.label}</span>
+              <span className={styles.statValue}>{stat.value}%</span>
+            </div>
+            <div className={styles.progressBarBg}>
+              <div 
+                className={styles.progressBarFill} 
+                style={{ 
+                  width: `${stat.value}%`, 
+                  background: stat.color,
+                  boxShadow: `0 0 10px ${stat.color}40`
+                }}
+              />
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Similar players recommendations */}
+      <div className={styles.sectionTitle}>Similar & Recommended Players</div>
+      <div className={styles.recommendationsGrid}>
+        {similarPlayers.map((simPlayer) => (
+          <Link 
+            key={simPlayer.name} 
+            href={`/player/${slugify(simPlayer.name)}`}
+            className={`${styles.recCard} glass-card glass-card-hover`}
+          >
+            <div className={styles.recImageWrapper}>
+              <PlayerImage name={simPlayer.name} width={80} height={80} className={styles.recImage} />
+            </div>
+            <div className={styles.recInfo}>
+              <h3 className={styles.recName}>{simPlayer.name}</h3>
+              <span className={styles.recRole}>{simPlayer.role}</span>
+              <div className={styles.recStats}>
+                <span>Tech: {simPlayer.technique}%</span>
+                <span>Aggr: {simPlayer.aggression}%</span>
+              </div>
+            </div>
+          </Link>
+        ))}
+      </div>
+    </div>
+  );
+}

@@ -547,3 +547,28 @@
   object-fit: cover;
 }
 
+.cardAction {
+  margin-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  padding-top: 12px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.viewMoreLink {
+  font-size: 13px;
+  font-weight: 600;
+  color: #818cf8;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.viewMoreLink:hover {
+  color: #a5b4fc;
+  text-shadow: 0 0 8px rgba(129, 140, 248, 0.5);
+  transform: translateX(2px);
+}
+

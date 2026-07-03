@@ -1,12 +1,23 @@
 'use client';
 
 import { useState, useMemo, useEffect } from 'react';
+import Link from 'next/link';
 import { Player } from '@/lib/players';
 import styles from './roster.module.css';
 import PlayerImage from '@/app/components/PlayerImage';
 
 interface RosterClientProps {
   initialPlayers: Player[];
+}
+
+function slugify(text: string): string {
+  return text
+    .toString()
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, '-')
+    .replace(/[^\w\-]+/g, '')
+    .replace(/\-\-+/g, '-');
 }
 
 export default function RosterClient({ initialPlayers }: RosterClientProps) {
@@ -319,6 +330,18 @@ export default function RosterClient({ initialPlayers }: RosterClientProps) {
                       <span className={styles.previewStatVal}>{player.accuracy}%</span>
                       <span className={styles.previewStatLabel}>Acc</span>
                     </div>
+                  </div>
+
+                  <div className={styles.cardAction}>
+                    <Link 
+                      href={`/player/${slugify(player.name)}`} 
+                      className={styles.viewMoreLink}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                      }}
+                    >
+                      View More &rarr;
+                    </Link>
                   </div>
                 </div>
               </div>
