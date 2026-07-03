@@ -1,0 +1,5 @@
+:HL["/FeCric/_next/static/media/22a5144ee8d83bca-s.p.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/FeCric/_next/static/media/7d4881bb7e1bf84d-s.p.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/FeCric/_next/static/css/895ef709c21a9c26.css","style"]
+:HL["/FeCric/_next/static/css/c40af5cd8ee37ca5.css","style"]
+0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"roster","param":null,"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}},"staleTime":300,"buildId":"Vmzwaf5FUit-xMTg3UBLk"}
