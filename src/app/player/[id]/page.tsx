@@ -13,6 +13,39 @@ function slugify(text: string): string {
     .replace(/\-\-+/g, '-');
 }
 
+function generatePlayerBio(player: Player): string {
+  const name = player.name;
+  const role = player.role;
+  const batting = player.batting.toLowerCase();
+  const bowling = player.bowling && player.bowling !== 'None' && player.bowling !== '-' ? player.bowling.toLowerCase() : null;
+
+  const attributes = [
+    { key: 'technique', label: 'Technique', val: player.technique, desc: 'exhibits superb technical prowess and clean mechanics' },
+    { key: 'timing', label: 'Timing', val: player.timing, desc: 'is celebrated for exquisite timing and natural flow' },
+    { key: 'aggression', label: 'Aggression', val: player.aggression, desc: 'brings raw power, intent, and high-octane aggression' },
+    { key: 'movement', label: 'Movement', val: player.movement, desc: 'extracts excellent movement and shows incredible agility' },
+    { key: 'accuracy', label: 'Accuracy', val: player.accuracy, desc: 'boasts exceptional consistency, command, and precision' },
+    { key: 'fielding', label: 'Fielding', val: player.fielding, desc: 'stands out for sharp reflexes and outstanding work in the field' },
+  ];
+
+  const sorted = [...attributes].sort((a, b) => b.val - a.val);
+  const primary = sorted[0];
+  const secondary = sorted[1];
+
+  let bio = `${name} is a competitive ${role.toLowerCase()}. `;
+  
+  if (bowling) {
+    bio += `Operating as a ${batting} batsman and bowling ${bowling}, they bring a balanced skill set to the team. `;
+  } else {
+    bio += `As a dedicated ${batting} player, they focus on anchoring the lineup and contributing in key phases of the game. `;
+  }
+
+  bio += `On the field, ${name} ${primary.desc} (rated at ${primary.val}%), which is their most defining characteristic. `;
+  bio += `This is complemented by a strong rating in ${secondary.label} (${secondary.val}%), making them a versatile team member who can adapt to varying match conditions.`;
+
+  return bio;
+}
+
 export function generateStaticParams() {
   const players = getPlayers();
   return players.map((player) => ({
@@ -91,6 +124,10 @@ export default async function PlayerPage({ params }: { params: Promise<{ id: str
                 <span className={styles.metaVal}>{player.bowling || 'N/A'}</span>
               </div>
             </div>
+
+            <p className={styles.playerBio}>
+              {generatePlayerBio(player)}
+            </p>
           </div>
         </div>
       </div>
