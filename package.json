@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --webpack",
-    "build": "next build --webpack && cp -rp out/* . && rm -rf out && rm -rf docs && touch .nojekyll",
+    "build": "next build --webpack && cp -rp out/* . && rm -rf out && rm -rf docs && find player -mindepth 1 -type d -exec rm -rf {} + && touch .nojekyll",
     "start": "next start",
     "lint": "eslint"
   },
