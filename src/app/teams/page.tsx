@@ -1,5 +1,6 @@
 import { getTeams } from '@/lib/players';
 import Link from 'next/link';
+import TeamLogo from '@/app/components/TeamLogo';
 import styles from './teams.module.css';
 
 export const metadata = {
@@ -23,7 +24,10 @@ export default function TeamsPage() {
         {teams.map((team) => (
           <div key={team.slug} className={`${styles.teamCard} glass-card glass-card-hover`}>
             <div>
-              <h2 className={styles.teamName}>{team.name}</h2>
+              <div className={styles.teamHeaderRow}>
+                <TeamLogo slug={team.slug} name={team.name} width={48} height={48} className={styles.teamLogo} />
+                <h2 className={styles.teamName}>{team.name}</h2>
+              </div>
               <div className={styles.teamDetails}>
                 <div className={styles.detailRow}>
                   <span className={styles.detailLabel}>Squad Size</span>

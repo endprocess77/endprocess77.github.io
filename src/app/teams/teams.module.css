@@ -33,11 +33,25 @@
   transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
+.teamHeaderRow {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.teamLogo {
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 4px;
+  object-fit: contain;
+}
+
 .teamName {
   font-size: 20px;
   font-weight: 700;
   color: var(--text-primary);
-  margin-bottom: 16px;
   line-height: 1.3;
 }
 

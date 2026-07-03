@@ -1,6 +1,7 @@
 import { getPlayers, getTeams, slugify } from '@/lib/players';
 import Link from 'next/link';
 import PlayerImage from '@/app/components/PlayerImage';
+import TeamLogo from '@/app/components/TeamLogo';
 import styles from './team.module.css';
 
 export function generateStaticParams() {
@@ -79,9 +80,12 @@ export default async function TeamPage({ params }: { params: Promise<{ id: strin
       {/* Hero Banner */}
       <div className={`${styles.teamHero} glass-card`}>
         <div className={styles.heroLayout}>
-          <div className={styles.heroDetails}>
-            <span className={styles.teamMeta}>League Competitor</span>
-            <h1 className={styles.teamName}>{team.name}</h1>
+          <div className={styles.heroHeaderSection}>
+            <TeamLogo slug={team.slug} name={team.name} width={80} height={80} className={styles.teamHeroLogo} />
+            <div className={styles.heroDetails}>
+              <span className={styles.teamMeta}>League Competitor</span>
+              <h1 className={styles.teamName}>{team.name}</h1>
+            </div>
           </div>
           <div className={styles.overallRatingBox}>
             <span className={styles.overallRatingVal}>{team.avgRating}%</span>
