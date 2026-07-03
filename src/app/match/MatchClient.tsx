@@ -252,7 +252,8 @@ export default function MatchClient({ initialPlayers }: MatchClientProps) {
 
       // Stream lines into log progressively for high-fidelity simulation effect
       let currentIdx = 0;
-      const interval = setInterval(() => {
+      let intervalId: any = null;
+      intervalId = setInterval(() => {
         try {
           if (currentIdx < logLines.length) {
             setSimulationLog(prev => [...prev, logLines[currentIdx]]);
@@ -268,14 +269,14 @@ export default function MatchClient({ initialPlayers }: MatchClientProps) {
             
             currentIdx++;
           } else {
-            clearInterval(interval);
+            if (intervalId) clearInterval(intervalId);
             setIsSimulating(false);
             setScoreA({ runs: runsA, wickets: wicketsA, overs: Math.min(20, oversA) });
             setScoreB({ runs: runsB, wickets: wicketsB, overs: Math.min(20, oversB) });
             setWinner(runsB > runsA ? "Team B" : runsA > runsB ? "Team A" : "Tie");
           }
         } catch (err: any) {
-          clearInterval(interval);
+          if (intervalId) clearInterval(intervalId);
           setIsSimulating(false);
           setSimulationLog(prev => [...prev, `[SIMULATION ERROR]: ${err.message || err}`]);
           console.error("Simulation interval error:", err);
