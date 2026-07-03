@@ -18,7 +18,7 @@ interface PlayerImageProps {
 }
 
 function PlayerImage({ name, className, width, height, priority = false }: PlayerImageProps) {
-  const basePath = '/FeCric';
+  const basePath = '';
   // Try loading player-specific image
   const [src, setSrc] = useState(`${basePath}/${encodeURIComponent(name)}.png`);
 

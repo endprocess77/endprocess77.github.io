@@ -1,6 +1,0 @@
-1:"$Sreact.fragment"
-2:I[2723,["500","static/chunks/500-c99b8dfd3de17c86.js","177","static/chunks/app/layout-8fd7f226afcd8354.js"],"default"]
-3:I[7121,[],""]
-4:I[4581,[],""]
-:HL["/FeCric/_next/static/css/895ef709c21a9c26.css","style"]
-0:{"rsc":["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/FeCric/_next/static/css/895ef709c21a9c26.css","precedence":"next"}]],["$","html",null,{"lang":"en","className":"__variable_45bf83 __variable_a914e3","children":["$","body",null,{"children":["$","div",null,{"className":"layout-container","children":[["$","$L2",null,{}],["$","main",null,{"className":"layout-main","children":["$","$L3",null,{"parallelRouterKey":"children","template":["$","$L4",null,{}]}]}]]}]}]}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"Vmzwaf5FUit-xMTg3UBLk"}
