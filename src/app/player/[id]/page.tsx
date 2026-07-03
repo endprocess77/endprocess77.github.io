@@ -70,16 +70,11 @@ export default async function PlayerPage({ params }: { params: Promise<{ id: str
     );
   }
 
-  // Get similar players: same role, closest technique/aggression difference
-  const similarPlayers = players
-    .filter((p) => p.name !== player.name && p.role === player.role)
-    .map((p) => {
-      const distance = Math.abs(p.technique - player.technique) + Math.abs(p.aggression - player.aggression);
-      return { player: p, distance };
-    })
-    .sort((a, b) => a.distance - b.distance)
-    .slice(0, 4)
-    .map((item) => item.player);
+  // Get 4 random players of the same role (shuffled)
+  const sameRolePlayers = players.filter((p) => p.name !== player.name && p.role === player.role);
+  const similarPlayers = [...sameRolePlayers]
+    .sort(() => 0.5 - Math.random())
+    .slice(0, 4);
 
   const stats = [
     { label: 'Technique', value: player.technique, color: '#f43f5e' },
